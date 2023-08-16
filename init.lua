@@ -41,6 +41,12 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- 
+-- disable netrw at the very start for nvim-tree
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -96,6 +102,16 @@ require('lazy').setup({
     'simrat39/rust-tools.nvim'
   },
 
+  -- javascript jsx highlight
+  -- {
+  --   'yuezk/vim-js',
+  --   'maxmellon/vim-jsx-pretty',
+  -- },
+  -- graphql support
+  -- {
+  --   'jparise/vim-graphql',
+  -- },
+
   {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -106,7 +122,7 @@ require('lazy').setup({
 
       -- Adds LSP completion capabilities
       'hrsh7th/cmp-nvim-lsp',
-
+      --
       -- Adds a number of user-friendly snippets
       'rafamadriz/friendly-snippets',
 
@@ -149,6 +165,9 @@ require('lazy').setup({
     priority = 1000,
     config = function()
       vim.cmd.colorscheme 'onedark'
+      require('onedark').setup ({
+        style = 'light'
+      })
     end,
   },
 
@@ -217,7 +236,7 @@ require('lazy').setup({
 
   -- ai completion
   {
-    "zbirenbaum/copilot.lua",
+    'zbirenbaum/copilot.lua',
     cmd = "Copilot",
     event = "InsertEnter",
     config = function()
@@ -251,6 +270,64 @@ require('lazy').setup({
   },
 
 
+  {
+    -- jump plugin like easymotion
+    'phaazon/hop.nvim',
+    branch = 'v2',
+    config = function()
+      require("hop").setup({
+        keys = 'etovxqpdygfblzhckisuran'
+      })
+    end,
+
+  },
+
+  {
+    -- diagnostics list
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+    },
+  },
+
+  {
+    'danilamihailov/beacon.nvim',
+  },
+  {
+    -- highlight the other uses of the current word
+    'RRethy/vim-illuminate',
+  },
+  {
+    'tpope/vim-surround',
+  },
+  {
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    opts = {} -- this is equalent to setup({}) function
+  },
+  {
+    -- file tree 
+    "nvim-tree/nvim-tree.lua",
+    version = "*",
+    lazy = false,
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
+    config = function()
+      require("nvim-tree").setup ({
+        sort_by = "case_sensitive",
+        renderer = {
+          group_empty = true,
+        },
+        filters = {
+          dotfiles = true
+        },
+      })
+    end,
+  },
   -- end of plugin
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -500,6 +577,9 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
+  -- eslint = {},
+
+
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   lua_ls = {
@@ -541,6 +621,18 @@ mason_lspconfig.setup_handlers {
     }
   end
 }
+-- lsp config 
+local nvim_lsp = require('lspconfig')
+-- ts js lsp
+-- nvim_lsp.tsserver.setup { }
+--   filetypes = { "typescript", "javascript", "javascriptreact", "javascript.jsx" },
+--   cmd = { "typescript-language-server", "--stdio" }
+-- }
+-- flow lsp
+nvim_lsp.flow.setup{}
+-- relay lsp
+nvim_lsp.relay_lsp.setup{}
+
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
@@ -588,7 +680,6 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'path' },                         -- file paths
-    { name = 'nvim_lsp',               keyword_length = 3 }, -- from language server
     { name = 'nvim_lsp_signature_help' },      -- display function signatures with current parameter emphasized
     { name = 'nvim_lua',               keyword_length = 2 }, -- complete neovim's Lua runtime API such vim.lsp.*
     { name = 'buffer',                 keyword_length = 2 }, -- source current buffer
@@ -736,3 +827,93 @@ copilot.setup({
   copilot_node_command = 'node', -- Node.js version must be > 16.x
   server_opts_overrides = {},
 })
+
+-- hop config
+local hop = require('hop')
+local directions = require('hop.hint').HintDirection
+vim.keymap.set('', 'f', function()
+  hop.hint_char2({ direction = directions.AFTER_CURSOR, current_line_only = false })
+end, {remap=true})
+vim.keymap.set('', 'F', function()
+  hop.hint_char2({ direction = directions.BEFORE_CURSOR, current_line_only = false })
+end, {remap=true})
+vim.keymap.set('', 't', function()
+  hop.hint_char2({ direction = directions.AFTER_CURSOR, current_line_only = false, hint_offset = -1 })
+end, {remap=true})
+vim.keymap.set('', 'T', function()
+  hop.hint_char2({ direction = directions.BEFORE_CURSOR, current_line_only = false, hint_offset = 1 })
+end, {remap=true})
+vim.keymap.set('n', '<leader>hw', ":HopWord<CR>", { desc = '[H]op to [w]ord' })
+vim.keymap.set('n', '<leader>hl', ":HopLine<CR>", { desc = '[H]op to [l]ine' })
+
+
+-- trouble config
+vim.keymap.set("n", "<leader>xx", function() require("trouble").open() end)
+vim.keymap.set("n", "<leader>xw", function() require("trouble").open("workspace_diagnostics") end)
+vim.keymap.set("n", "<leader>xd", function() require("trouble").open("document_diagnostics") end)
+vim.keymap.set("n", "<leader>xq", function() require("trouble").open("quickfix") end)
+vim.keymap.set("n", "<leader>xl", function() require("trouble").open("loclist") end)
+vim.keymap.set("n", "gR", function() require("trouble").open("lsp_references") end)
+local actions = require("telescope.actions")
+local trouble = require("trouble.providers.telescope")
+
+local telescope = require("telescope")
+
+telescope.setup {
+  defaults = {
+    mappings = {
+      i = { ["<c-t>"] = trouble.open_with_trouble },
+      n = { ["<c-t>"] = trouble.open_with_trouble },
+    },
+  },
+}
+
+
+-- TODO: beacon config
+
+
+-- nvim-autopairs x nvim-cmp config 
+-- to insert '(' after function or method item in nvim-cmp
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+local handlers = require('nvim-autopairs.completion.handlers')
+
+cmp.event:on(
+  'confirm_done',
+  cmp_autopairs.on_confirm_done({
+    filetypes = {
+      -- "*" is a alias to all filetypes
+      ["*"] = {
+        ["("] = {
+          kind = {
+            cmp.lsp.CompletionItemKind.Function,
+            cmp.lsp.CompletionItemKind.Method,
+          },
+          handler = handlers["*"]
+        }
+      },
+      lua = {
+        ["("] = {
+          kind = {
+            cmp.lsp.CompletionItemKind.Function,
+            cmp.lsp.CompletionItemKind.Method
+          },
+          ---@param char string
+          ---@param item table item completion
+          ---@param bufnr number buffer number
+          ---@param rules table
+          ---@param commit_character table<string>
+          handler = function(char, item, bufnr, rules, commit_character)
+            -- Your handler function. Inpect with print(vim.inspect{char, item, bufnr, rules, commit_character})
+          end
+        }
+      },
+      -- Disable for tex
+      tex = false
+    }
+  })
+)
+-- nvim tree config
+vim.keymap.set('n', '<leader>t', ":NvimTreeToggle<CR>", { desc = 'NvimTree[T]oggle toggle the tree' })
+local ntree = require("nvim-tree")
+
+
