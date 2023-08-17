@@ -136,7 +136,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',  opts = {} },
+  { 'folke/which-key.nvim', opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -197,7 +197,10 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  {
+    'numToStr/Comment.nvim',
+    opts = {},
+  },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -217,7 +220,13 @@ require('lazy').setup({
           return vim.fn.executable 'make' == 1
         end,
       },
+      {
+        'nvim-telescope/telescope-live-grep-args.nvim'
+      }
     },
+    config = function()
+      require('telescope').load_extension("live_grep_args")
+    end
   },
 
   {
@@ -417,6 +426,8 @@ require('telescope').setup {
         ['<C-d>'] = false,
       },
     },
+    -- shorten the path displayed
+    path_display = { "smart" }
   },
 }
 
@@ -438,7 +449,8 @@ vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>sg', ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>",
+  { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
 -- [[ Configure Treesitter ]]
@@ -577,7 +589,7 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
-  -- eslint = {},
+  eslint = {},
 
 
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
@@ -737,7 +749,7 @@ let g:vimspector_terminal_maxwidth = 70
 
 
 -- FloaTerm configuration
-vim.keymap.set('n', "<leader>ft", ":FloatermNew --name=myfloat --height=0.8 --width=0.7 --autoclose=2 fish <CR> ")
+-- vim.keymap.set('n', "<leader>ft", ":FloatermNew --name=myfloat --height=0.8 --width=0.7 --autoclose=2 fish <CR> ")
 vim.keymap.set('n', "t", ":FloatermToggle myfloat<CR>")
 vim.keymap.set('t', "<Esc>", "<C-\\><C-n>:q<CR>")
 
@@ -831,20 +843,27 @@ copilot.setup({
 -- hop config
 local hop = require('hop')
 local directions = require('hop.hint').HintDirection
-vim.keymap.set('', 'f', function()
-  hop.hint_char2({ direction = directions.AFTER_CURSOR, current_line_only = false })
-end, { remap = true })
-vim.keymap.set('', 'F', function()
-  hop.hint_char2({ direction = directions.BEFORE_CURSOR, current_line_only = false })
-end, { remap = true })
-vim.keymap.set('', 't', function()
-  hop.hint_char2({ direction = directions.AFTER_CURSOR, current_line_only = false, hint_offset = -1 })
-end, { remap = true })
-vim.keymap.set('', 'T', function()
-  hop.hint_char2({ direction = directions.BEFORE_CURSOR, current_line_only = false, hint_offset = 1 })
-end, { remap = true })
+-- vim.keymap.set('', 'f', function()
+--   hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = false })
+-- end, { remap = true })
+-- vim.keymap.set('', 'F', function()
+--   hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = false })
+-- end, { remap = true })
+-- vim.keymap.set('', '<leader>f', function()
+--   hop.hint_char2({ direction = directions.AFTER_CURSOR, current_line_only = false })
+-- end, { remap = true })
+-- vim.keymap.set('', '<leader>F', function()
+--   hop.hint_char2({ direction = directions.BEFORE_CURSOR, current_line_only = false })
+-- end, { remap = true })
+-- vim.keymap.set('', 't', function()
+--   hop.hint_char2({ direction = directions.AFTER_CURSOR, current_line_only = false, hint_offset = -1 })
+-- end, { remap = true })
+-- vim.keymap.set('', 'T', function()
+--   hop.hint_char2({ direction = directions.BEFORE_CURSOR, current_line_only = false, hint_offset = 1 })
+-- end, { remap = true })
 vim.keymap.set('n', '<leader>hw', ":HopWord<CR>", { desc = '[H]op to [w]ord' })
 vim.keymap.set('n', '<leader>hl', ":HopLine<CR>", { desc = '[H]op to [l]ine' })
+vim.keymap.set('n', '<leader>hh', ":HopChar2MW<CR>", { desc = '[H]op with 2 char' })
 
 
 -- trouble config
