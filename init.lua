@@ -41,7 +41,7 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- 
+--
 -- disable netrw at the very start for nvim-tree
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -165,7 +165,7 @@ require('lazy').setup({
     priority = 1000,
     config = function()
       vim.cmd.colorscheme 'onedark'
-      require('onedark').setup ({
+      require('onedark').setup({
         style = 'light'
       })
     end,
@@ -256,7 +256,7 @@ require('lazy').setup({
   {
     'romgrk/barbar.nvim',
     dependencies = {
-      'lewis6991/gitsigns.nvim', -- OPTIONAL: for git status
+      'lewis6991/gitsigns.nvim',     -- OPTIONAL: for git status
       'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
     },
     init = function() vim.g.barbar_auto_setup = false end,
@@ -287,9 +287,9 @@ require('lazy').setup({
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
     },
   },
 
@@ -309,7 +309,7 @@ require('lazy').setup({
     opts = {} -- this is equalent to setup({}) function
   },
   {
-    -- file tree 
+    -- file tree
     "nvim-tree/nvim-tree.lua",
     version = "*",
     lazy = false,
@@ -317,7 +317,7 @@ require('lazy').setup({
       "nvim-tree/nvim-web-devicons",
     },
     config = function()
-      require("nvim-tree").setup ({
+      require("nvim-tree").setup({
         sort_by = "case_sensitive",
         renderer = {
           group_empty = true,
@@ -445,7 +445,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'lua', 'python', 'rust', 'tsx', 'typescript', 'javascript', 'toml', 'vimdoc', 'vim'},
+  ensure_installed = { 'lua', 'python', 'rust', 'tsx', 'typescript', 'javascript', 'toml', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = true,
@@ -621,7 +621,7 @@ mason_lspconfig.setup_handlers {
     }
   end
 }
--- lsp config 
+-- lsp config
 local nvim_lsp = require('lspconfig')
 -- ts js lsp
 -- nvim_lsp.tsserver.setup { }
@@ -629,9 +629,9 @@ local nvim_lsp = require('lspconfig')
 --   cmd = { "typescript-language-server", "--stdio" }
 -- }
 -- flow lsp
-nvim_lsp.flow.setup{}
+nvim_lsp.flow.setup {}
 -- relay lsp
-nvim_lsp.relay_lsp.setup{}
+nvim_lsp.relay_lsp.setup {}
 
 
 -- [[ Configure nvim-cmp ]]
@@ -679,11 +679,11 @@ cmp.setup {
   sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
-    { name = 'path' },                         -- file paths
-    { name = 'nvim_lsp_signature_help' },      -- display function signatures with current parameter emphasized
+    { name = 'path' },                                       -- file paths
+    { name = 'nvim_lsp_signature_help' },                    -- display function signatures with current parameter emphasized
     { name = 'nvim_lua',               keyword_length = 2 }, -- complete neovim's Lua runtime API such vim.lsp.*
     { name = 'buffer',                 keyword_length = 2 }, -- source current buffer
-    { name = 'calc' },                         -- source for math calculation
+    { name = 'calc' },                                       -- source for math calculation
   },
   window = {
     completion = cmp.config.window.bordered(),
@@ -833,16 +833,16 @@ local hop = require('hop')
 local directions = require('hop.hint').HintDirection
 vim.keymap.set('', 'f', function()
   hop.hint_char2({ direction = directions.AFTER_CURSOR, current_line_only = false })
-end, {remap=true})
+end, { remap = true })
 vim.keymap.set('', 'F', function()
   hop.hint_char2({ direction = directions.BEFORE_CURSOR, current_line_only = false })
-end, {remap=true})
+end, { remap = true })
 vim.keymap.set('', 't', function()
   hop.hint_char2({ direction = directions.AFTER_CURSOR, current_line_only = false, hint_offset = -1 })
-end, {remap=true})
+end, { remap = true })
 vim.keymap.set('', 'T', function()
   hop.hint_char2({ direction = directions.BEFORE_CURSOR, current_line_only = false, hint_offset = 1 })
-end, {remap=true})
+end, { remap = true })
 vim.keymap.set('n', '<leader>hw', ":HopWord<CR>", { desc = '[H]op to [w]ord' })
 vim.keymap.set('n', '<leader>hl', ":HopLine<CR>", { desc = '[H]op to [l]ine' })
 
@@ -872,7 +872,7 @@ telescope.setup {
 -- TODO: beacon config
 
 
--- nvim-autopairs x nvim-cmp config 
+-- nvim-autopairs x nvim-cmp config
 -- to insert '(' after function or method item in nvim-cmp
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local handlers = require('nvim-autopairs.completion.handlers')
@@ -915,5 +915,3 @@ cmp.event:on(
 -- nvim tree config
 vim.keymap.set('n', '<leader>t', ":NvimTreeToggle<CR>", { desc = 'NvimTree[T]oggle toggle the tree' })
 local ntree = require("nvim-tree")
-
-
